@@ -3,6 +3,7 @@
 #include "camera/cgamecamera.h"
 #include "ogrerenderwindow.h"
 #include "ogrecamera.h"
+#include "OgreViewport.h"
 //------------------------------------------------------------------------------------------
 using namespace rtc;
 //------------------------------------------------------------------------------------------

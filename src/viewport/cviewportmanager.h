@@ -1,6 +1,6 @@
 #ifndef __CVIEWPORTMANAGER_H__
 #define __CVIEWPORTMANAGER_H__
-
+//Primary job is to contain all the information required for rendering a scene into a section of an output surface.
 #include "types/rtc_types.h"
 #include "game/cgameentity.h"
 #include <map>

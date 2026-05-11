@@ -1,0 +1,102 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="viewport">
+      <UniqueIdentifier>{53119e6d-9a3b-45c1-bb00-8e77dff110fa}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="camera">
+      <UniqueIdentifier>{9279500b-f2d2-40a6-a000-54c35f15041c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="input">
+      <UniqueIdentifier>{e8d8a2c5-b221-43e0-a375-6069a916178a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="game">
+      <UniqueIdentifier>{2dd37b69-ee71-4f46-bba5-eb79921d1fbb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="types">
+      <UniqueIdentifier>{4ed13fcf-9ec2-452c-80ea-03ebdf046aa0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="render">
+      <UniqueIdentifier>{b06395fb-a236-4ac4-bb5b-e9b35d898f1f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="system">
+      <UniqueIdentifier>{4c460354-d000-40df-b78f-363eb045a10b}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\viewport\cviewport.cpp">
+      <Filter>viewport</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\viewport\cviewportmanager.cpp">
+      <Filter>viewport</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\camera\ccameramanager.cpp">
+      <Filter>camera</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\camera\cfirstpersoncamera.cpp">
+      <Filter>camera</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\camera\cgamecamera.cpp">
+      <Filter>camera</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\input\ccontrolmanager.cpp">
+      <Filter>input</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\input\cinputmanager.cpp">
+      <Filter>input</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\game\cgameentity.cpp">
+      <Filter>game</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\render\crendermanager.cpp">
+      <Filter>render</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\system\crtcapplication.cpp">
+      <Filter>system</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\system\crtcframelistener.cpp">
+      <Filter>system</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\viewport\cviewport.h">
+      <Filter>viewport</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\viewport\cviewportmanager.h">
+      <Filter>viewport</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\camera\ccameramanager.h">
+      <Filter>camera</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\camera\cfirstpersoncamera.h">
+      <Filter>camera</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\camera\cgamecamera.h">
+      <Filter>camera</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\input\ccontrolmanager.h">
+      <Filter>input</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\input\cinputmanager.h">
+      <Filter>input</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\input\scontrollerdata.h">
+      <Filter>input</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\game\cgameentity.h">
+      <Filter>game</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\types\rtc_types.h">
+      <Filter>types</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\render\crendermanager.h">
+      <Filter>render</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\system\crtcapplication.h">
+      <Filter>system</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\system\crtcframelistener.h">
+      <Filter>system</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>

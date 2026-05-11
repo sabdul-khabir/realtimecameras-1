@@ -1,5 +1,5 @@
 #include "system/crtcframelistener.h"
-
+#include "Overlay\OgreOverlayManager.h"
 //------------------------------------------------------------------------------------------
 using namespace OIS;
 //------------------------------------------------------------------------------------------
@@ -79,10 +79,10 @@ void CRtcFrameListener::windowClosed(RenderWindow* rw)
 
 void CRtcFrameListener::windowResized(RenderWindow* rw)
 {
-	unsigned int width, height, depth;
+	unsigned int width, height;
 	int left, top;
 	
-    rw->getMetrics(width, height, depth, left, top);
+    rw->getMetrics(width, height, left, top);
 
 	OIS::MouseState const & mouseState = mpMouse->getMouseState();
 	mouseState.width = width;

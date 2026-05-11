@@ -4,7 +4,7 @@
 #include "types/rtc_types.h"
 #include "ogreprerequisites.h"
 #include <map>
-
+//Responsible for keeping track of all of the cameras, passing input to them, and making sure that the appropriate ones update.
 namespace Ogre {
     class SceneManager;
 }

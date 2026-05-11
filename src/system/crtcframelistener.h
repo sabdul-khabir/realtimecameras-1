@@ -8,8 +8,9 @@
 //Use this define to signify OIS will be used as a DLL
 //(so that dll import/export macros are in effect)
 #define OIS_DYNAMIC_LIB
-#include <OIS/OIS.h>
-
+#include <OIS.h>
+#include <Bites/OgreWindowEventUtilities.h>
+#include "Overlay/OgreOverlay.h"
 using namespace Ogre;
 
 class CRtcFrameListener: public FrameListener, public WindowEventListener

@@ -1,0 +1,268 @@
+move towards path
+move towards character
+-collision detection
+orientation
+rotation towards orientation
+interpolation (to and from camera)
+field of view
+rendering effects
+
+input -> think -> move(except camera) -> messaging -> camera(movement and logic) -> post camera(camera transformation dependent logic) -> render
+
+
+script:
+
+MyAction = UseActor("Bob");
+TheDoor = UseActor("Door");
+With MyActor
+WalkTo(TheDoor)
+TheDoor.Open();
+FaceCamera();
+CloseUp();
+Say("Leaveing.mp3");
+Wait(5)
+Exit(TheDoor);
+Close(TheDoor);
+StartCinematic("BobLeaves");
+FadeToBlack(2);
+
+Script Trigger.Entered(theActor)
+{
+if(theActor=="Player")
+{
+attachedCamera= GetConnectedCamera();
+if(attachedCamera.Valid())StartCamera(attachedCamera)
+}
+}
+
+Enter or Exit volume
+Crossing of plane surface
+Proxximity to an object while maintaining line of sight
+
+common event messages:
+level startup
+object loading
+game is paused
+volume entered or exited
+player character is damaged
+object reaches the end of a motion path
+object state changes , for example "received damage", "destroyed"
+--Start
+Stop
+Activate
+Delete
+Perform action
+query state
+
+camera hints - temporarily override or alter existing camera behavior within a specific area of the game
+-start stoping hings
+-handle simultaneously hints
+type of camera behavior (stationary, path-based)
+position and orientation
+desired positional offset relative to target
+look-at-offset/target selection method
+movement speed
+field of view
+player hints - temp change aspects of the player control or other characteristics of player character
+--prevent motion of player
+--relocate player position
+--change player movement characteristics
+--flags to indicate special kinds of gameplay
+control hints 
+---distable specific controls or sets of player controls
+---spec control 
+
+
+Triggers
+volume based
+event based (game message, etc)
+timer based
+distance based(sphere)
+flags (where a flag activates or deactivates)
+hing (where a (player,camera,control)hint activates or deactivates)
+
+World-relative offset
+Vec3 desiredPosition = GetTargetObject()->GetPosition() + mOffset;
+
+World-relative angular offset
+Vec3 offset(0.0f, cosf(pitch) * distance, sinf(pitch) * distance);
+//construct a rotation matrix around the world up-axis
+Mat3 rotation = Mat3::ZRotation(yaw);
+mOffset = rotation * offset;
+
+World object relative - player between the camera and an arbitrary position in space
+Mat3 rotation = Mat3::LookAt(GetTargetObject()->GetPosition().DropZ(), mWorldPosition.DropZ());
+mOffset = rotation * offset;
+Vec3 desiredPosition = GetTargetObject()->GetPosition() + mOffset;
+
+Local offset 
+Mat3 rotation = mScriptObject->GetMatrix();
+moffset = rotation * offset;
+Vec3 desiredPosition = GetTargetObject()->GetPosition() + mOffset;
+
+Local angular offset
+Vec3 offset(0, cos(pitch) * distance, sinf(pitch) * distance);
+Mat3 rotation = mScriptObject->GetMatrix();
+mOffset = rotation * offset;
+Vec3 desiredPosition = GetTargetObject()->GetPosition() + mOffset;
+
+
+Object-relative offset
+Mat3 rotation = Mat3::LookAt(GetPosition().DropZ(), GetTargetObject()->GetPosition().DropZ());
+Vec3 offset(0, cos(pitch) * distance, sinf(pitch) * distance);
+moffset = rotation * offset;
+Vec3 desiredPosition = GetTargetObject()->GetPosition() + mOffset;
+
+Dampening
+float kDampingAngle(30.0f * RadiansPerDegree)
+float angle = cos(dot(currentOrientation, desiredOrientation)))
+float dampeningfactor = limit(angle/dampingangle,1.0)
+float angularlimit = angularspeed * deltatTime * dampeningfactor
+neworientation = lookat(currentorientation, desiredOrientation, angularLimit)
+
+Damp unwanted noise in the vertical motion of camera
+float const kMaxZMotionPerSecond(0.25f);
+float zMotion = newPosition.GetZ() - oldPosition.GetZ();
+float const maxZMotion = kMaxZMotionPerSecondd * deltaTime;
+zMotion = Math::Limit(zMotion, maxZMotion);
+newPosition.SetZ(oldPosition.GetZ() + zMotion);
+
+Spring and PID dampening
+float const zMotion = newPosition.GetZ() - oldPosition.GetZ();
+verticalSpring.SetLength(AbsF(zMotion));
+//update spring len
+float const newZMotion = verticalSpring.Update(deltaTime);
+if(zMotion > 0.0f)
+newPosition.SetZ(newPosition.GetZ() - newZMotion);
+else
+newPosition.SetZ(newPosition.GetZ() + newZMotion);
+
+proportional controller
+Vec3 const deltaPosition = desiredPosition - currentPosition;
+//the distance at which velocity damping is applied
+float const kDampDistance(5.0f)
+float const K = Math::Limit(deltaPosition.Magnitude() / kDampDistance,1.0f)
+//limit constant to 0..1 based on distance
+Vec3 const cameraVelocity = deltaPosition.AsNormalized() + K;
+Vec3 const newPosition = currentPosition + cameraVelocity * deltaTime;
+//updating above code to take into account target velocity
+Vec3 targetVelocity = (desiredPosition - previousDesiredPosition)/deltaTime;
+Vec3 cameraVelocity = (deltaPosition.AsNormalized() * K * deltaTime) + (targetVelocity * t);
+
+//adding lag to smooth motion
+float const acceleration = Math::Limit((desiredVelocity - currentVelocity), kMaxAcceleration);
+Vec3 const currentVelocity += acceleration * deltaTime;
+Vec3 const desiredPosition = currentPosition + (currentVelocity * deltaTime);
+
+PID usage
+Vec3 const currentDelta = currentPosition - desiredPosition;
+float const currentDistance = currentDelta.Magnitude();
+float const newDistance = PIDController.Update(desiredDistance, currentDistance, deltaTime);
+Vec3 const currentPosition = desiredPosition + (currentDelta.AsNormalized() * newDistance);
+
+moving a camera by constant angular velocity
+Vec3 cameraBearing = Vec3(currentPosition - referencePoint);
+Vec3 desiredBearing = Vec3(desiredPosition - referencePoint);
+float const radius = cameraBearing.Magnitude();
+cameraBearing.Normalize();
+desiredBearing.Normalize();
+float const angularMotion = angularVelocity * deltaTime;
+Quat const q = Quat::ShortestRotationArcClamped(cameraBearing, desiredBearing, angularMotion);
+Vec3 const newBearing = q * cameraBearing;
+Vec3 const new Position = referencePoint + (newBearing * radius);
+
+CLV(constant linear velocity)
+Vec3 cameraBearing = Vec3(currentPosition - referencePoint);
+Vec3 desiredBearing = Vec3(desiredPosition - referencePoint);
+float const radius = cameraBearing.Magnitude()
+cameraBearing.Normalize();
+desiredBearing.Normalize();
+float const arcLength = angularVelocity * deltaTime;
+float const angularMotion = acosf(arcLength/radius);
+Quat const q = Quat::ShortestRotationArcClampted(cameraBearing, desiredBearing, angularMotion);
+Vec3 const newBearing = q * cameraBearing;
+Vec3 const newPosition = referencePoint + (newBearing * radius);
+
+
+Simple motion filter:
+Vec3 const movementDelta = newPosition - currentPosition;
+if(movementDelta.Magnitude() > kMovementThreshold)
+{
+currentPosition = newPosition
+}else
+{
+
+PID:
+Vec3 const movementDelta = newPosition - currentPosition;
+if(!close_enough(movementDelta, Vec3::Zero())
+{
+float distance = movementDelta.Magnitude();
+distance = mMovementFilter.Update(distance);
+currentPosition += movementDelta.AsNormalize() * distance
+}
+
+prevention of camera motion
+float const kMinimumZDistance(0.1f);
+float const zDistance(currentPosition.GetZ() - waterPlane.GetZ());
+if(fabs(zDistance) < kMinimumZDistance)
+{
+currentPosition.SetZ(waterPlane.GetZ() + Math::Sign(zDistance) * kMinimumZDistance);
+}
+-simple distance constraint
+Vec3 const unconstrainedOffset = currentPosition - desiredPosition;
+float const currentDistance = inverseDirection.Magnitude();
+float const newDistance = Math::Clamp(kMinDistance,currentDistance,kMaxDistance);
+Vec3 const newOffset = uncontrainedOffset.AsNormalized() * newDistance;
+currentPosition = desiredPosition + newOffset;
+//still necessary to check validity of this movement
+--infinite contraining plane
+CPlane const plane(normal, constant);
+Vec3 cameraPosition(GetCurrentPosition());
+float const planeDistance = Vec3::Dot(plane.GetNormal(), cameraPosition) - plane.GetConstant();
+if(planeDistance < kMinDistance)
+{
+cameraPosition += plane.GetNormal( * (planeDistance - kMinDistance);
+}
+
+Digital Filters (low,high,band)
+FIR filter
+static float const firCoefficients[]=
+{
+	//adjust these values accordingly
+	0.f,0.f,0.f,0.1f,0.2f,0.3f,0.4f
+};
+
+float Initialize(void)
+{
+	for(int i = 0;i < mHistoryBuffer.size();++i) mCoefficients[i] = firCoefficents[i]l
+}
+
+float Update(float const input)//input can be camera distance to target or other values
+{
+	//copy the entries in the history buffer up by one positin
+	for(int i = mHistoryBuffer.size() -2;i >=0;--i)mHistoryBuffer[i + 1] = mHistoryBuffer[i];
+
+	mHistoryBuffer[0] = input;//record new value as-is
+	float fir(0);
+	for(int i = 0;i < mHistoryBuffer.size();++i) fir += mCoefficients[i] * mHistoryBuffer[i];
+	return fir;
+}
+
+IIR filter (incorporates output values)
+void Initialize(void)
+{
+	mInputCoefficients[0] = 0.5f;
+	mInputCoefficients[1] = 0.3f;
+	mOutputCoefficients[0] = 0.5f;
+	mOutputCoefficients[1] = 0.3f;
+}
+
+float Update(float const input)
+{
+	for(int i = mInputHistoryBuffer.size() - 2;i >= 0;--i) mInputHistoryBuffer[i+1]=mInputHistoryBuffer[i];
+	mInputHistoryBuffer[0] = input;
+float const result = mInputCoefficients[0] * mInputHistoryBuffer[0] + mInputCoefficients[1] * mInputHistoryBuffer[1] + mOutputCoefficients[0]*mOutputHistoryBuffer[0] + mOutputCoefficients[1]*mOutputHistoryBuffer[1]
+for(int i=mOutputHistoryBuffer.size() - 2;i >=0;--i) mOutputHistoryBuffer[i + 1]=mOutputHistoryBuffer[i];
+mOutputHistoryBuffer[0] = result;
+return result;
+}
